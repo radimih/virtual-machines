@@ -1,0 +1,3 @@
+[submodule "bento"]
+	path = bento
+	url = git@github.com:chef/bento.git
