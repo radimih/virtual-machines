@@ -9,3 +9,6 @@ crash.log
 
 # Default directories for temporary virtual machines
 output-*/
+
+# Vagrant files
+.vagrant/

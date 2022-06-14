@@ -55,7 +55,7 @@ source "virtualbox-iso" "ubuntu" {
   boot_wait               = "5s"
   export_opts             = [
     "--vsys", "0",  # this parameter is required for subsequent options by VBoxManage export
-    "--description", "${var.box_filename}",
+    "--description", "Vagrant box: ${var.box_filename}\nPacker build: ${local.build_time}",
     "--version", "${local.build_time}"
   ]
   guest_additions_path    = "VBoxGuestAdditions_{{ .Version }}.iso"
@@ -67,10 +67,8 @@ source "virtualbox-iso" "ubuntu" {
   iso_url                 = "${local.distr.mirror}/${local.distr.mirror_directory}/${local.distr.iso_name}"
   shutdown_command        = "echo 'vagrant' | sudo -S shutdown -P now"
   ssh_password            = "vagrant"
-  ssh_port                = 22
-  ssh_timeout             = "10000s"
   ssh_username            = "vagrant"
-  virtualbox_version_file = ".vbox_version"
+  ssh_timeout             = "1h"
 }
 
 build {
@@ -95,5 +93,6 @@ build {
 
   post-processor "vagrant" {
     output = "${local.output_dir}/${var.box_filename}.box"
+    vagrantfile_template = "${path.root}/../vagrantfile_templates/my-ubuntu.vagrantfile"
   }
 }
