@@ -48,16 +48,11 @@ source "virtualbox-iso" "ubuntu" {
     "<bs><bs><bs><bs><wait>",
     " autoinstall<wait5>",
     " ds=nocloud-net<wait5>",
-    ";s=http://<wait5>{{.HTTPIP}}<wait5>:{{.HTTPPort}}/<wait5>",
+    ";s=http://<wait5>{{ .HTTPIP }}<wait5>:{{ .HTTPPort }}/<wait5>",
     " ---<wait5>",
     "<enter><wait5>"
   ]
   boot_wait                = "5s"
-  export_opts              = [
-    "--vsys", "0",  # this parameter is required for subsequent options by VBoxManage export
-    "--description", "Vagrant box: ${var.box_filename}\nPacker build: ${local.build_time}",
-    "--version", "${local.build_time}"
-  ]
   guest_additions_path     = "VBoxGuestAdditions_{{ .Version }}.iso"
   guest_os_type            = "Ubuntu_64"
   hard_drive_interface     = "sata"
@@ -71,6 +66,20 @@ source "virtualbox-iso" "ubuntu" {
   ssh_password             = "vagrant"
   ssh_username             = "vagrant"
   ssh_timeout              = "1h"
+  vboxmanage               = [
+    # Hardware VirtualBox settings (see https://www.virtualbox.org/manual/ch08.html#vboxmanage-modifyvm)
+    ["modifyvm", "{{ .Name }}", "--graphicscontroller", "vmsvga"],
+    ["modifyvm", "{{ .Name }}", "--hwvirtex", "on"],
+    ["modifyvm", "{{ .Name }}", "--ioapic", "on"],
+    ["modifyvm", "{{ .Name }}", "--rtcuseutc", "on"],
+    ["modifyvm", "{{ .Name }}", "--vram", "16"],
+  ]
+  vboxmanage_post          = [
+    # General VirtualBox settings (see https://www.virtualbox.org/manual/ch08.html#vboxmanage-modifyvm)
+    ["modifyvm", "{{ .Name }}", "--clipboard", "bidirectional"],
+    ["modifyvm", "{{ .Name }}", "--description", "Vagrant box: ${var.box_filename}\n\nPacker build: ${local.build_time}"],
+    ["modifyvm", "{{ .Name }}", "--vrde", "off"],
+  ]
 }
 
 build {
@@ -95,6 +104,5 @@ build {
 
   post-processor "vagrant" {
     output = "${local.output_dir}/${var.box_filename}.box"
-    vagrantfile_template = "${path.root}/vagrantfiles/base.vagrantfile"
   }
 }
