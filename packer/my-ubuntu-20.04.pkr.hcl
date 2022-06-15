@@ -32,11 +32,11 @@ locals {
 }
 
 source "virtualbox-iso" "ubuntu" {
-  cpus                    = 2  # the number of cpus to use for building the VM
-  memory                  = 1024  # the amount of memory to use for building the VM in megabytes
-  disk_size               = 20000  # the size, in megabytes, of the hard disk to create for the VM
+  cpus                     = 2  # the number of cpus to use for building the VM
+  memory                   = 1024  # the amount of memory to use for building the VM in megabytes
+  disk_size                = 20000  # the size, in megabytes, of the hard disk to create for the VM
 
-  boot_command            = [
+  boot_command             = [
     " <wait>",
     " <wait>",
     " <wait>",
@@ -52,23 +52,25 @@ source "virtualbox-iso" "ubuntu" {
     " ---<wait5>",
     "<enter><wait5>"
   ]
-  boot_wait               = "5s"
-  export_opts             = [
+  boot_wait                = "5s"
+  export_opts              = [
     "--vsys", "0",  # this parameter is required for subsequent options by VBoxManage export
     "--description", "Vagrant box: ${var.box_filename}\nPacker build: ${local.build_time}",
     "--version", "${local.build_time}"
   ]
-  guest_additions_path    = "VBoxGuestAdditions_{{ .Version }}.iso"
-  guest_os_type           = "Ubuntu_64"
-  hard_drive_interface    = "sata"
-  headless                = var.cicd_mode
-  http_directory          = "${local.parent_project_http_dir}"
-  iso_checksum            = "${local.distr.iso_checksum}"
-  iso_url                 = "${local.distr.mirror}/${local.distr.mirror_directory}/${local.distr.iso_name}"
-  shutdown_command        = "echo 'vagrant' | sudo -S shutdown -P now"
-  ssh_password            = "vagrant"
-  ssh_username            = "vagrant"
-  ssh_timeout             = "1h"
+  guest_additions_path     = "VBoxGuestAdditions_{{ .Version }}.iso"
+  guest_os_type            = "Ubuntu_64"
+  hard_drive_interface     = "sata"
+  hard_drive_discard       = true
+  hard_drive_nonrotational = true
+  headless                 = var.cicd_mode
+  http_directory           = "${local.parent_project_http_dir}"
+  iso_checksum             = "${local.distr.iso_checksum}"
+  iso_url                  = "${local.distr.mirror}/${local.distr.mirror_directory}/${local.distr.iso_name}"
+  shutdown_command         = "echo 'vagrant' | sudo -S shutdown -P now"
+  ssh_password             = "vagrant"
+  ssh_username             = "vagrant"
+  ssh_timeout              = "1h"
 }
 
 build {
