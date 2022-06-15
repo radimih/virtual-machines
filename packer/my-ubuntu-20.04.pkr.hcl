@@ -93,6 +93,6 @@ build {
 
   post-processor "vagrant" {
     output = "${local.output_dir}/${var.box_filename}.box"
-    vagrantfile_template = "${path.root}/../vagrantfile_templates/my-ubuntu.vagrantfile"
+    vagrantfile_template = "${path.root}/vagrantfiles/base.vagrantfile"
   }
 }
