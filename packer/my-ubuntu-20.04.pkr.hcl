@@ -4,9 +4,14 @@
 # Based on: Chef/Bento (https://github.com/chef/bento)
 # =====================================================================================================================
 
-variable box_filename {
+variable box_name {
   type    = string
   default = "my-ubuntu-20.04"
+}
+
+variable box_version {
+  type    = string
+  default = "1.0"
 }
 
 variable cicd_mode {
@@ -24,7 +29,7 @@ locals {
     mirror_directory = "focal"
   }
   # ${path.root} - the directory of this file
-  output_dir = "${path.root}/../boxes"
+  output_box_file = "${path.root}/../boxes/${var.box_name}-${var.box_version}.box"
   parent_project_dir = "${path.root}/../vendors/bento"
   parent_project_http_dir = "${local.parent_project_dir}/packer_templates/ubuntu/http"
   parent_project_scripts_dir = "${local.parent_project_dir}/packer_templates/ubuntu/scripts"
@@ -77,7 +82,7 @@ source "virtualbox-iso" "ubuntu" {
   vboxmanage_post          = [
     # General VirtualBox settings (see https://www.virtualbox.org/manual/ch08.html#vboxmanage-modifyvm)
     ["modifyvm", "{{ .Name }}", "--clipboard", "bidirectional"],
-    ["modifyvm", "{{ .Name }}", "--description", "Vagrant box: ${var.box_filename}\n\nPacker build: ${local.build_time}"],
+    ["modifyvm", "{{ .Name }}", "--description", "Vagrant box: ${var.box_name}, version: ${var.box_version}\n\nPacker build time: ${local.build_time}"],
     ["modifyvm", "{{ .Name }}", "--vrde", "off"],
   ]
 }
@@ -103,6 +108,6 @@ build {
   }
 
   post-processor "vagrant" {
-    output = "${local.output_dir}/${var.box_filename}.box"
+    output = "${local.output_box_file}"
   }
 }
