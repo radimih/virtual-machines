@@ -107,7 +107,17 @@ build {
     ]
   }
 
-  post-processor "vagrant" {
-    output = "${local.output_box_file}"
+  post-processors {
+    post-processor "vagrant" {
+      output = "${local.output_box_file}"
+    }
+    post-processor "shell-local" {
+      environment_vars = [
+        "BOX_FILE=${local.output_box_file}",
+        "BOX_NAME=${var.box_name}",
+        "BOX_VERSION=${var.box_version}",
+      ]
+      scripts = ["${path.root}/scripts/_local/make_box_metadata.sh"]
+    }
   }
 }
