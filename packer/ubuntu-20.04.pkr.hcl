@@ -83,7 +83,7 @@ source "virtualbox-iso" "ubuntu" {
     # General VirtualBox settings (see https://www.virtualbox.org/manual/ch08.html#vboxmanage-modifyvm)
     ["modifyvm", "{{ .Name }}", "--clipboard", "bidirectional"],
     ["modifyvm", "{{ .Name }}", "--description", "Vagrant box: ${var.box_name}, version: ${var.box_version}\n\nPacker build time: ${local.build_time}"],
-    ["modifyvm", "{{ .Name }}", "--vrde", "off"],
+    ["modifyvm", "{{ .Name }}", "--vrde", "off"], # disable VirtualBox Remote Display Protocol (VRDP)
   ]
 }
 
