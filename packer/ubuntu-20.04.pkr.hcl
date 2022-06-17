@@ -102,7 +102,8 @@ build {
       "${local.parent_project_scripts_dir}/sudoers.sh",
       "${local.parent_project_scripts_dir}/vagrant.sh",
       "${local.parent_project_common_scripts_dir}/virtualbox.sh",
-      "${local.parent_project_scripts_dir}/cleanup.sh",
+      "${path.root}/scripts/ubuntu/server.sh",
+      "${path.root}/scripts/ubuntu/cleanup.sh",
       "${local.parent_project_common_scripts_dir}/minimize.sh"
     ]
   }
