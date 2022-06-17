@@ -6,7 +6,7 @@
 
 variable box_name {
   type    = string
-  default = "my-ubuntu-20.04"
+  default = "ubuntu-20.04"
 }
 
 variable box_version {
