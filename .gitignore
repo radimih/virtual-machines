@@ -6,3 +6,12 @@ crash.log
 
 # For built boxes
 *.box
+
+# Default directories for temporary virtual machines
+output-*/
+
+# Vagrant files
+.vagrant/
+
+# For built boxes and his metadata
+/boxes/
