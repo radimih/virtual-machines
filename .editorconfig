@@ -1,0 +1,7 @@
+# EditorConfig is awesome: https://EditorConfig.org
+
+[*.{json,hcl}]
+indent_size = 2
+
+[Vagrantfile]
+indent_size = 2
