@@ -86,6 +86,8 @@ source "virtualbox-iso" "ubuntu" {
     ["modifyvm", "{{ .Name }}", "--description", "Vagrant box: ${var.box_name}, version: ${var.box_version}\n\nPacker build time: ${local.build_time}"],
     ["modifyvm", "{{ .Name }}", "--vrde", "off"], # disable VirtualBox Remote Display Protocol (VRDP)
     # GUI VirtualBox settings
+    ["setextradata", "global", "GUI/Customizations", "noStatusBar"],
+    ["setextradata", "global", "GUI/MaxGuestResolution", "any"], # remove all limits on guest resolutions
     ["setextradata", "global", "GUI/SuppressMessages", "all"], # disable all notifications (eg, about auto capture keyboard and mouse)
   ]
 }
