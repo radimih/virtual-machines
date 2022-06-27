@@ -5,8 +5,8 @@
 echo "==> Checking version of Ubuntu"
 . /etc/lsb-release
 
-echo "==> Installing ubuntu-desktop"
-apt-get install -y ubuntu-desktop
+echo "==> Installing minimal ubuntu-desktop"
+apt-get install -y ubuntu-desktop-minimal
 
 USERNAME=vagrant
 LIGHTDM_CONFIG=/etc/lightdm/lightdm.conf
