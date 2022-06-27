@@ -1,5 +1,4 @@
 # virtual-machines
-Build and use my virtual machine images
 
 ## Сборка своего Vagrant Box
 
@@ -9,10 +8,9 @@ packer build packer/<имя Packer-шаблона.pkr.hcl>
 
 В каталоге `boxes` будет создан соответствующий Vagrant Box (`*.box`) и файл с метаданными (`*.json`).
 
-Созданный Vagrant Box добавлять с помощью команды `vagrant box add` не нужно. Достаточно
-в Vagrantfile в параметре `box_url` указать полный путь до файла с метаданными Vagrant Box (`*.json`).
-
-Пример Vagrantfile:
+Далее в Vagrantfile указываются параметры:
+  * `box` - имя Vagrant Box (параметр `box_name` в Packer-шаблоне)
+  * `box_url` - полный путь до файла с метаданными Vagrant Box (`*.json`):
 
 ```ruby
 # -*- mode: ruby -*-
@@ -26,4 +24,13 @@ Vagrant.configure("2") do |config|
     v.name = "<имя виртуальной машины в VirtualBox>"
   end
 end
+```
+
+Первый вызов команды `vagrant up` автоматически добавит в Vagrant соответствующий Vagrant Box (`vagrant box list`).
+
+Если Vagrant Box был обновлён, то чтобы изменения вступили в силу, необходимо перед командой `vagrant up`
+удалить из Vagrant предыдущий вариант Vagrant Box:
+
+```bash
+vagrant box remove <имя Vagrant Box>
 ```
