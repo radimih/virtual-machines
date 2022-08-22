@@ -23,10 +23,8 @@ variable cicd_mode {
 locals {
   build_time = "${formatdate("YYYY-MM-DD hh:mm ZZZ", timestamp())}"
   distr = {
-    iso_checksum = "84aeaf7823c8c61baa0ae862d0a06b03409394800000b3235854a6b38eb4856f"
-    iso_name = "ubuntu-22.04-live-server-amd64.iso"
-    mirror = "http://releases.ubuntu.com"
-    mirror_directory = "jammy"
+    iso_checksum = "10f19c5b2b8d6db711582e0e27f5116296c34fe4b313ba45f9b201a5007056cb"
+    iso_url = "https://releases.ubuntu.com/22.04.1/ubuntu-22.04.1-live-server-amd64.iso"
   }
   # ${path.root} - the directory of this file
   output_box_file = "${path.root}/../boxes/${var.box_name}-${var.box_version}.box"
@@ -72,7 +70,7 @@ source "virtualbox-iso" "ubuntu" {
   headless                 = var.cicd_mode
   http_directory           = "${local.parent_project_http_dir}"
   iso_checksum             = "${local.distr.iso_checksum}"
-  iso_url                  = "${local.distr.mirror}/${local.distr.mirror_directory}/${local.distr.iso_name}"
+  iso_url                  = "${local.distr.iso_url}"
   shutdown_command         = "echo 'vagrant' | sudo -S shutdown -P now"
   ssh_password             = "vagrant"
   ssh_username             = "vagrant"
