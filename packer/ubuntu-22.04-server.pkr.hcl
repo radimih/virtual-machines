@@ -28,10 +28,10 @@ locals {
   }
   # ${path.root} - the directory of this file
   output_box_file = "${path.root}/../boxes/${var.box_name}-${var.box_version}.box"
-  parent_project_dir = "${path.root}/../vendors/bento"
-  parent_project_http_dir = "${local.parent_project_dir}/packer_templates/ubuntu/http"
-  parent_project_scripts_dir = "${local.parent_project_dir}/packer_templates/ubuntu/scripts"
-  parent_project_common_scripts_dir = "${local.parent_project_dir}/packer_templates/_common"
+  bento_dir = "${path.root}/../vendors/bento"
+  bento_http_dir = "${local.bento_dir}/packer_templates/ubuntu/http"
+  bento_scripts_dir = "${local.bento_dir}/packer_templates/ubuntu/scripts"
+  bento_common_scripts_dir = "${local.bento_dir}/packer_templates/_common"
 }
 
 source "virtualbox-iso" "ubuntu" {
@@ -68,7 +68,7 @@ source "virtualbox-iso" "ubuntu" {
   hard_drive_discard       = true
   hard_drive_nonrotational = true
   headless                 = var.cicd_mode
-  http_directory           = "${local.parent_project_http_dir}"
+  http_directory           = "${local.bento_http_dir}"
   iso_checksum             = "${local.distr.iso_checksum}"
   iso_url                  = "${local.distr.iso_url}"
   shutdown_command         = "echo 'vagrant' | sudo -S shutdown -P now"
@@ -99,16 +99,16 @@ build {
     execute_command   = "echo 'vagrant' | {{ .Vars }} sudo -S -E sh -eux '{{ .Path }}'"
     expect_disconnect = true
     scripts           = [
-      "${local.parent_project_scripts_dir}/update.sh",
-      "${local.parent_project_common_scripts_dir}/motd.sh",
-      "${local.parent_project_common_scripts_dir}/sshd.sh",
-      "${local.parent_project_scripts_dir}/networking.sh",
-      "${local.parent_project_scripts_dir}/sudoers.sh",
-      "${local.parent_project_scripts_dir}/vagrant.sh",
-      "${local.parent_project_common_scripts_dir}/virtualbox.sh",
+      "${local.bento_scripts_dir}/update.sh",
+      "${local.bento_common_scripts_dir}/motd.sh",
+      "${local.bento_common_scripts_dir}/sshd.sh",
+      "${local.bento_scripts_dir}/networking.sh",
+      "${local.bento_scripts_dir}/sudoers.sh",
+      "${local.bento_scripts_dir}/vagrant.sh",
+      "${local.bento_common_scripts_dir}/virtualbox.sh",
       "${path.root}/scripts/ubuntu/server.sh",
       "${path.root}/scripts/ubuntu/cleanup.sh",
-      "${local.parent_project_common_scripts_dir}/minimize.sh"
+      "${local.bento_common_scripts_dir}/minimize.sh"
     ]
   }
 
