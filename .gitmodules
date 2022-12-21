@@ -1,6 +1,4 @@
 [submodule "bento"]
-	path = bento
-	url = git@github.com:chef/bento.git
-[submodule "vendors/bento"]
 	path = vendors/bento
 	url = git@github.com:chef/bento.git
+    branch = main
