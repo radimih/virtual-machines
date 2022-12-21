@@ -1,0 +1,16 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "fedora-37-workstation"
+  config.vm.box_url = "file://#{Dir.home()}/ws/virtual-machines/boxes/fedora-37-workstation.json"
+
+  config.vm.provider "virtualbox" do |v|
+    v.name = "fedora-37-workstation"
+    v.gui = true
+    v.memory = 4096
+    v.customize ["setextradata", :id, "CustomVideoMode1", "1920x1080x32"]
+    v.customize ["setextradata", :id, "GUI/Fullscreen", "on"]
+    v.customize ["setextradata", :id, "GUI/MiniToolBarAlignment", "top"]
+  end
+end
