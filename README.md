@@ -3,6 +3,7 @@
 ## Сборка своего Vagrant Box
 
 ```bash
+git submodule update --init
 packer build packer/<имя Packer-шаблона.pkr.hcl>
 ```
 
