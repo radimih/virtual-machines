@@ -11,7 +11,7 @@ variable box_name {
 
 variable box_version {
   type    = string
-  default = "1.0"
+  default = "2.0"
 }
 
 variable cicd_mode {

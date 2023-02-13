@@ -9,6 +9,12 @@ packer build packer/<имя Packer-шаблона.pkr.hcl>
 
 В каталоге `boxes` будет создан соответствующий Vagrant Box (`*.box`) и файл с метаданными (`*.json`).
 
+Необходимо периодически обновлять репозитории вендоров:
+
+```bash
+git submodule update --remote vendors/bento
+```
+
 ## Использование своего Vagrant Box
 
 В Vagrantfile указываются параметры:
