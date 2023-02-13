@@ -23,15 +23,17 @@ variable cicd_mode {
 locals {
   build_time = "${formatdate("YYYY-MM-DD hh:mm ZZZ", timestamp())}"
   distr = {
+    # Невозможно использовать образ Fedora Workstation, так как для LiveCD не работает способ установки через Kickstart
+    # https://docs.fedoraproject.org/en-US/fedora/f36/install-guide/advanced/Kickstart_Installations/#sect-kickstart-howto
     iso_checksum_url = "https://getfedora.org/static/checksums/37/iso/Fedora-Server-37-1.7-x86_64-CHECKSUM"
     iso_url = "https://download.fedoraproject.org/pub/fedora/linux/releases/37/Server/x86_64/iso/Fedora-Server-dvd-x86_64-37-1.7.iso"
   }
   # ${path.root} - the directory of this file
   output_box_file = "${path.root}/../boxes/${var.box_name}-${var.box_version}.box"
   bento_dir = "${path.root}/../vendors/bento"
-  bento_http_dir = "${local.bento_dir}/packer_templates/fedora/http"
-  bento_scripts_dir = "${local.bento_dir}/packer_templates/fedora/scripts"
-  bento_common_scripts_dir = "${local.bento_dir}/packer_templates/_common"
+  bento_http_dir = "${local.bento_dir}/packer_templates/http/fedora"
+  bento_scripts_dir = "${local.bento_dir}/packer_templates/scripts/fedora"
+  bento_common_scripts_dir = "${local.bento_dir}/packer_templates/scripts/_common"
 }
 
 source "virtualbox-iso" "fedora" {
@@ -40,7 +42,7 @@ source "virtualbox-iso" "fedora" {
   disk_size                = 20000  # the size, in megabytes, of the hard disk to create for the VM
 
   boot_command             = [
-    "<up><up>e<wait><down><down><end> inst.text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks-fedora.cfg<F10><wait>"
+    "<up><up>e<wait><down><down><end> inst.text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<F10><wait>"
   ]
   boot_wait                = "5s"
   guest_additions_path     = "VBoxGuestAdditions_{{ .Version }}.iso"
@@ -85,18 +87,16 @@ build {
     execute_command   = "echo 'vagrant' | {{ .Vars }} sudo -S -E sh -eux '{{ .Path }}'"
     expect_disconnect = true
     scripts           = [
-      "${local.bento_scripts_dir}/fix-slow-dns.sh",
-      "${local.bento_scripts_dir}/update.sh",
-      "${local.bento_scripts_dir}/build-tools.sh",
-      "${local.bento_scripts_dir}/install-supporting-packages.sh",
+      "${local.bento_scripts_dir}/networking_fedora.sh",
+      "${local.bento_scripts_dir}/update_dnf.sh",
+      "${local.bento_scripts_dir}/build-tools_fedora.sh",
       "${local.bento_common_scripts_dir}/motd.sh",
       "${local.bento_common_scripts_dir}/sshd.sh",
       "${local.bento_common_scripts_dir}/virtualbox.sh",
       "${local.bento_common_scripts_dir}/vagrant.sh",
       "${path.root}/scripts/fedora/workstation.sh",
-      "${local.bento_scripts_dir}/real-tmp.sh",
-      "${local.bento_scripts_dir}/cleanup.sh",
-      "${local.bento_scripts_dir}/crypto-policy.sh",
+      "${local.bento_scripts_dir}/real-tmp_fedora.sh",
+      "${local.bento_scripts_dir}/cleanup_dnf.sh",
       "${local.bento_common_scripts_dir}/minimize.sh"
     ]
   }
