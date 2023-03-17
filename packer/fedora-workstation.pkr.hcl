@@ -1,17 +1,17 @@
 # =====================================================================================================================
-# OS: Fedora Workstation 37
+# OS: Fedora Workstation
 #
 # Based on: Chef/Bento (https://github.com/chef/bento)
 # =====================================================================================================================
 
 variable box_name {
   type    = string
-  default = "fedora-37-workstation"
+  default = "fedora-38-workstation"
 }
 
 variable box_version {
   type    = string
-  default = "2.0"
+  default = "1.0"
 }
 
 variable cicd_mode {
@@ -25,8 +25,8 @@ locals {
   distr = {
     # Невозможно использовать образ Fedora Workstation, так как для LiveCD не работает способ установки через Kickstart
     # https://docs.fedoraproject.org/en-US/fedora/f36/install-guide/advanced/Kickstart_Installations/#sect-kickstart-howto
-    iso_checksum_url = "https://getfedora.org/static/checksums/37/iso/Fedora-Server-37-1.7-x86_64-CHECKSUM"
-    iso_url = "https://download.fedoraproject.org/pub/fedora/linux/releases/37/Server/x86_64/iso/Fedora-Server-dvd-x86_64-37-1.7.iso"
+    iso_checksum_url = "https://mirror.yandex.ru/fedora/linux/releases/test/38_Beta/Server/x86_64/iso/Fedora-Server-38_Beta-1.3-x86_64-CHECKSUM"
+    iso_url = "https://mirror.yandex.ru/fedora/linux/releases/test/38_Beta/Server/x86_64/iso/Fedora-Server-dvd-x86_64-38_Beta-1.3.iso"
   }
   # ${path.root} - the directory of this file
   output_box_file = "${path.root}/../boxes/${var.box_name}-${var.box_version}.box"
@@ -42,7 +42,7 @@ source "virtualbox-iso" "fedora" {
   disk_size                = 20000  # the size, in megabytes, of the hard disk to create for the VM
 
   boot_command             = [
-    "<up><up>e<wait><down><down><end> inst.text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<F10><wait>"
+    "<wait><up><up>e<wait><down><down><end> inst.text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<F10><wait>"
   ]
   boot_wait                = "5s"
   guest_additions_path     = "VBoxGuestAdditions_{{ .Version }}.iso"
