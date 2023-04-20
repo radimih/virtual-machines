@@ -25,8 +25,8 @@ locals {
   distr = {
     # Невозможно использовать образ Fedora Workstation, так как для LiveCD не работает способ установки через Kickstart
     # https://docs.fedoraproject.org/en-US/fedora/f36/install-guide/advanced/Kickstart_Installations/#sect-kickstart-howto
-    iso_checksum_url = "https://mirror.yandex.ru/fedora/linux/releases/test/38_Beta/Server/x86_64/iso/Fedora-Server-38_Beta-1.3-x86_64-CHECKSUM"
-    iso_url = "https://mirror.yandex.ru/fedora/linux/releases/test/38_Beta/Server/x86_64/iso/Fedora-Server-dvd-x86_64-38_Beta-1.3.iso"
+    iso_checksum_url = "https://download.fedoraproject.org/pub/fedora/linux/releases/38/Workstation/x86_64/iso/Fedora-Workstation-38-1.6-x86_64-CHECKSUM"
+    iso_url = "https://download.fedoraproject.org/pub/fedora/linux/releases/38/Workstation/x86_64/iso/Fedora-Workstation-Live-x86_64-38-1.6.iso"
   }
   # ${path.root} - the directory of this file
   output_box_file = "${path.root}/../boxes/${var.box_name}-${var.box_version}.box"
