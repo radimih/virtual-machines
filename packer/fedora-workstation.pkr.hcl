@@ -4,6 +4,19 @@
 # Based on: Chef/Bento (https://github.com/chef/bento)
 # =====================================================================================================================
 
+packer {
+  required_plugins {
+    vagrant = {
+      source  = "github.com/hashicorp/vagrant"
+      version = "~> 1"
+    }
+    virtualbox = {
+      version = "~> 1"
+      source  = "github.com/hashicorp/virtualbox"
+    }
+  }
+}
+
 variable box_name {
   type    = string
   default = "fedora-38-workstation"
@@ -25,8 +38,8 @@ locals {
   distr = {
     # Невозможно использовать образ Fedora Workstation, так как для LiveCD не работает способ установки через Kickstart
     # https://docs.fedoraproject.org/en-US/fedora/f36/install-guide/advanced/Kickstart_Installations/#sect-kickstart-howto
-    iso_checksum_url = "https://download.fedoraproject.org/pub/fedora/linux/releases/38/Workstation/x86_64/iso/Fedora-Workstation-38-1.6-x86_64-CHECKSUM"
-    iso_url = "https://download.fedoraproject.org/pub/fedora/linux/releases/38/Workstation/x86_64/iso/Fedora-Workstation-Live-x86_64-38-1.6.iso"
+    iso_checksum_url = "https://download.fedoraproject.org/pub/fedora/linux/releases/38/Server/x86_64/iso/Fedora-Server-38-1.6-x86_64-CHECKSUM"
+    iso_url = "https://download.fedoraproject.org/pub/fedora/linux/releases/38/Server/x86_64/iso/Fedora-Server-dvd-x86_64-38-1.6.iso"
   }
   # ${path.root} - the directory of this file
   output_box_file = "${path.root}/../boxes/${var.box_name}-${var.box_version}.box"
@@ -45,6 +58,9 @@ source "virtualbox-iso" "fedora" {
     "<wait><up><up>e<wait><down><down><end> inst.text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<F10><wait>"
   ]
   boot_wait                = "5s"
+  gfx_accelerate_3d        = true
+  gfx_controller           = "vmsvga"
+  gfx_vram_size            = 128
   guest_additions_path     = "VBoxGuestAdditions_{{ .Version }}.iso"
   guest_os_type            = "Fedora_64"
   hard_drive_interface     = "sata"
@@ -60,12 +76,11 @@ source "virtualbox-iso" "fedora" {
   ssh_timeout              = "1h"
   vboxmanage               = [
     # Hardware VirtualBox settings (see https://www.virtualbox.org/manual/ch08.html#vboxmanage-modifyvm)
-    ["modifyvm", "{{ .Name }}", "--accelerate3d", "on"],
-    ["modifyvm", "{{ .Name }}", "--graphicscontroller", "vmsvga"],
+    ["modifyvm", "{{ .Name }}", "--audio", "none"],
     ["modifyvm", "{{ .Name }}", "--hwvirtex", "on"],
     ["modifyvm", "{{ .Name }}", "--ioapic", "on"],
+    ["modifyvm", "{{ .Name }}", "--nat-localhostreachable1", "on"],
     ["modifyvm", "{{ .Name }}", "--rtcuseutc", "on"],
-    ["modifyvm", "{{ .Name }}", "--vram", "256"],
   ]
   vboxmanage_post          = [
     # General VirtualBox settings (see https://www.virtualbox.org/manual/ch08.html#vboxmanage-modifyvm)

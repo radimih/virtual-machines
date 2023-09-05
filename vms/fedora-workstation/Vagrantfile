@@ -3,7 +3,7 @@
 
 Vagrant.configure("2") do |config|
   config.vm.box = "fedora-38-workstation"
-  config.vm.box_url = "file://#{Dir.home()}/ws/virtual-machines/boxes/fedora-38-workstation.json"
+  config.vm.box_url = "file://#{Dir.home()}/1git/virtual-machines/boxes/fedora-38-workstation.json"
 
   config.vm.provider "virtualbox" do |v|
     v.name = "fedora-workstation"

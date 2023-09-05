@@ -4,6 +4,7 @@
 
 ```bash
 git submodule update --init
+packer init packer/<имя Packer-шаблона.pkr.hcl>
 packer build packer/<имя Packer-шаблона.pkr.hcl>
 ```
 
@@ -28,7 +29,7 @@ git submodule update --remote vendors/bento
 
 Vagrant.configure("2") do |config|
   config.vm.box = "<имя Vagrant Box>"
-  config.vm.box_url = "file://#{Dir.home()}/ws/virtual-machines/boxes/<имя Vagrant Box>.json"
+  config.vm.box_url = "file://#{Dir.home()}/1git/virtual-machines/boxes/<имя Vagrant Box>.json"
 
   config.vm.provider "virtualbox" do |v|
     v.name = "<имя виртуальной машины в VirtualBox>"
