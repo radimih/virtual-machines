@@ -14,4 +14,4 @@ output-*/
 .vagrant/
 
 # For built boxes and his metadata
-/boxes/
+boxes/

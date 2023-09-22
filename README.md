@@ -1,11 +1,21 @@
 # virtual-machines
 
+Для сборки Vagrant-образов используется HashiCorp [Packer](https://developer.hashicorp.com/packer).
+
+ПРИМЕЧАНИЯ:
+
+- На **Fedora** лучше просто скачать бинарник утилиты Packer, чем устанавливать его из rpm-репозитория
+  HashiCorp, так как в этом репозитории находится и Vagrant, а его предпочтительнее ставить из родного
+  репозитория Fedora.
+
+- ВНИМАНИЕ! Загрузка бинарника или доступ к apt/rpm-репозиториям HashiCorp могут быть закрыты из России.
+
 ## Сборка своего Vagrant Box
 
 ```bash
 git submodule update --init
-packer init packer/<имя Packer-шаблона.pkr.hcl>
-packer build packer/<имя Packer-шаблона.pkr.hcl>
+packer init templates/<имя Packer-шаблона.pkr.hcl>
+packer build templates/<имя Packer-шаблона.pkr.hcl>
 ```
 
 В каталоге `boxes` будет создан соответствующий Vagrant Box (`*.box`) и файл с метаданными (`*.json`).
