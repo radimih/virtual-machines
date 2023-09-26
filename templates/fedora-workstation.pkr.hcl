@@ -12,7 +12,7 @@ packer {
     }
     virtualbox = {
       version = "~> 1"
-      source  = "github.com/hashicorp/virtualbox"
+      source  = "github.com/hashicorp/qemu"
     }
   }
 }
@@ -49,7 +49,7 @@ locals {
   bento_common_scripts_dir = "${local.bento_dir}/packer_templates/scripts/_common"
 }
 
-source "virtualbox-iso" "fedora" {
+source "qemu" "fedora" {
   cpus                     = 2  # the number of cpus to use for building the VM
   memory                   = 2048  # the amount of memory to use for building the VM in megabytes
   disk_size                = 20000  # the size, in megabytes, of the hard disk to create for the VM
@@ -58,14 +58,6 @@ source "virtualbox-iso" "fedora" {
     "<wait><up><up>e<wait><down><down><end> inst.text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<F10><wait>"
   ]
   boot_wait                = "5s"
-  gfx_accelerate_3d        = true
-  gfx_controller           = "vmsvga"
-  gfx_vram_size            = 128
-  guest_additions_path     = "VBoxGuestAdditions_{{ .Version }}.iso"
-  guest_os_type            = "Fedora_64"
-  hard_drive_interface     = "sata"
-  hard_drive_discard       = true
-  hard_drive_nonrotational = true
   headless                 = var.cicd_mode
   http_directory           = "${local.bento_http_dir}"
   iso_checksum             = "file:${local.distr.iso_checksum_url}"
@@ -74,28 +66,17 @@ source "virtualbox-iso" "fedora" {
   ssh_password             = "vagrant"
   ssh_username             = "vagrant"
   ssh_timeout              = "1h"
-  vboxmanage               = [
-    # Hardware VirtualBox settings (see https://www.virtualbox.org/manual/ch08.html#vboxmanage-modifyvm)
-    ["modifyvm", "{{ .Name }}", "--audio", "none"],
-    ["modifyvm", "{{ .Name }}", "--hwvirtex", "on"],
-    ["modifyvm", "{{ .Name }}", "--ioapic", "on"],
-    ["modifyvm", "{{ .Name }}", "--nat-localhostreachable1", "on"],
-    ["modifyvm", "{{ .Name }}", "--rtcuseutc", "on"],
-  ]
-  vboxmanage_post          = [
-    # General VirtualBox settings (see https://www.virtualbox.org/manual/ch08.html#vboxmanage-modifyvm)
-    ["modifyvm", "{{ .Name }}", "--clipboard", "bidirectional"],
-    ["modifyvm", "{{ .Name }}", "--description", "Vagrant box: ${var.box_name}, version: ${var.box_version}\n\nPacker build time: ${local.build_time}"],
-    ["modifyvm", "{{ .Name }}", "--vrde", "off"], # disable VirtualBox Remote Display Protocol (VRDP)
-    # GUI VirtualBox settings
-    ["setextradata", "global", "GUI/Customizations", "noStatusBar"],
-    ["setextradata", "global", "GUI/MaxGuestResolution", "any"], # remove all limits on guest resolutions
-    ["setextradata", "global", "GUI/SuppressMessages", "all"], # disable all notifications (eg, about auto capture keyboard and mouse)
-  ]
+
+  # QEMU specific configuration
+
+  accelerator  = "kvm"
+  display      = "none"  # allowing QEMU to choose the default
+  machine_type = "q35"  # list of machine_type: qemu-system-x86_64 -machine help
+  #qemuargs     = local.qemuargs
 }
 
 build {
-  sources = ["source.virtualbox-iso.fedora"]
+  sources = ["source.qemu.fedora"]
 
   provisioner "shell" {
     environment_vars  = ["HOME_DIR=/home/vagrant"]
@@ -107,7 +88,6 @@ build {
       "${local.bento_scripts_dir}/build-tools_fedora.sh",
       "${local.bento_common_scripts_dir}/motd.sh",
       "${local.bento_common_scripts_dir}/sshd.sh",
-      "${local.bento_common_scripts_dir}/virtualbox.sh",
       "${local.bento_common_scripts_dir}/vagrant.sh",
       "${path.root}/scripts/fedora/workstation.sh",
       "${local.bento_scripts_dir}/real-tmp_fedora.sh",

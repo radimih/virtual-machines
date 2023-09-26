@@ -81,7 +81,6 @@ source "qemu" "ubuntu" {
   accelerator  = "kvm"
   display      = "none"  # allowing QEMU to choose the default
   machine_type = "q35"  # list of machine_type: qemu-system-x86_64 -machine help
-  #qemuargs     = local.qemuargs
 }
 
 build {
