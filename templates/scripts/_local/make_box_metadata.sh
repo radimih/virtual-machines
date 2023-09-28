@@ -20,7 +20,7 @@ metadata="{
       \"version\": \"${box_version}\",
       \"providers\": [
         {
-          \"name\": \"virtualbox\",
+          \"name\": \"libvirt\",
           \"url\": \"file://$(realpath ${box_file})\",
           \"checksum\": \"${box_hash}\",
           \"checksum_type\": \"sha256\"

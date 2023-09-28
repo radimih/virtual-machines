@@ -41,8 +41,14 @@ Vagrant.configure("2") do |config|
   config.vm.box = "<имя Vagrant Box>"
   config.vm.box_url = "file://#{Dir.home()}/1git/virtual-machines/boxes/<имя Vagrant Box>.json"
 
-  config.vm.provider "virtualbox" do |v|
-    v.name = "<имя виртуальной машины в VirtualBox>"
+  # Отключить использование NFS для Synced Folders, так как это требует прав root
+  config.nfs.functional = false
+
+  # Полный список параметров: https://vagrant-libvirt.github.io/vagrant-libvirt/configuration.html
+
+  config.vm.provider :libvirt do |p|
+    p.cpus = 2
+    p.memory = 4096
   end
 end
 ```

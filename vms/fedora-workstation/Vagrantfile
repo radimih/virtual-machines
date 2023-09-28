@@ -5,12 +5,14 @@ Vagrant.configure("2") do |config|
   config.vm.box = "fedora-38-workstation"
   config.vm.box_url = "file://#{Dir.home()}/1git/virtual-machines/boxes/fedora-38-workstation.json"
 
-  config.vm.provider "virtualbox" do |v|
-    v.name = "fedora-workstation"
-    v.gui = true
-    v.memory = 4096
-    v.customize ["setextradata", :id, "CustomVideoMode1", "1920x1080x32"]
-    v.customize ["setextradata", :id, "GUI/Fullscreen", "on"]
-    v.customize ["setextradata", :id, "GUI/MiniToolBarAlignment", "top"]
+  # NFS Synced Folders require root privileges. Disable NFS
+  config.nfs.functional = false
+
+  # https://vagrant-libvirt.github.io/vagrant-libvirt/configuration.html
+
+  config.vm.provider :libvirt do |p|
+    p.cpus = 2
+    p.memory = 4096
+    p.video_type = 'qxl'
   end
 end
