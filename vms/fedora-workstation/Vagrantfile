@@ -5,7 +5,7 @@ Vagrant.configure("2") do |config|
   config.vm.box = "fedora-38-workstation"
   config.vm.box_url = "file://#{Dir.home()}/1git/virtual-machines/boxes/fedora-38-workstation.json"
 
-  # NFS Synced Folders require root privileges. Disable NFS
+  # NFS Synced Folders requires root privileges. Disable NFS
   config.nfs.functional = false
 
   # https://vagrant-libvirt.github.io/vagrant-libvirt/configuration.html
