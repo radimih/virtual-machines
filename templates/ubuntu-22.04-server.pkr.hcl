@@ -49,7 +49,7 @@ locals {
 
 source "qemu" "ubuntu" {
   cpus                     = 2  # the number of cpus to use for building the VM
-  memory                   = 1024  # the amount of memory to use for building the VM in megabytes
+  memory                   = 2048  # the amount of memory to use for building the VM in megabytes
   disk_size                = 20000  # the size, in megabytes, of the hard disk to create for the VM
 
   boot_command             = [

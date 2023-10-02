@@ -61,3 +61,10 @@ end
 ```bash
 vagrant box remove <имя Vagrant Box>
 ```
+
+ВНИМАНИЕ! Чтобы виртуалка была видна в **Virtual Machine Manager** (`virt-manager`), в нём необходимо добавить
+соединение `QEMU/KVM User session`:
+
+1. Меню **File / Add Connection...**
+1. Hypervisor: `QEMU/KVM user session`
+1. Autoconnect: `☑`
